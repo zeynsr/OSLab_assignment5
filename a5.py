@@ -14,13 +14,25 @@ def show_list():
     for product in PRODUCTS:
         print(product)
 
+
 def add():
     print('enter the information of new product : ')
-    code=input('code : ')
-    name=input('name : ')
-    price=input('price : ')
-    num=input('number : ')
+    code = input('code : ')
+    while True:
+        name = input('name : ')
+        check = False
+        for p in PRODUCTS:
+            if name == p['name']:
+                check = True
+                print('This product is already stored in the list')
+
+        if check == False:
+            break
+
+    price = input('price : ')
+    num = input('number : ')
     PRODUCTS.append({"code": code, "name": name, "price": price, "number": num})
+
 
 def edit():
     Edit_code=input('enter the code of product : ')
@@ -55,32 +67,60 @@ def search():
     s_pr=input('enter the name of your product : ')
     for p in PRODUCTS:
         if s_pr== p['name'] :
-            print(p)
+            print('name'+"   "+'price'+"   "+'number')
+            print(p['name']+' '+p['price']+' '+p['number'])
             return True
         else:
-            print('Couldn\'t find !🚫')
+            print('This product is not in stock !🚫')
             return False
 
-def buy():
-    p_b=input('enter the name of product that you want : ')
-    nu=int(input('how many do you want ? '))
+def Delete(name):
     for p in PRODUCTS:
-        if p_b==p['name'] :
-            n=int(p['number'])
-            if n==0 :
-                delete(p_b)
-                print('This product is not available')
-                break
-            elif nu>n :
-                print('This product is not available enough')
-                break
-            else:
-                pay =int(p['price'])
-                paym=pay*n
-                print('payment : '+str(paym))
-                n-=nu
-                p['number']=n
-                print('Thanks for your purchase')
+        if p["name"] == name:
+            PRODUCTS.remove(p)
+            return
+
+def buy():
+  show_list()
+  f=1
+  sum=0
+  shopping=[]
+  while f==1:
+      pr_b = input('enter the name of product that you want : ')
+      for p in PRODUCTS:
+          if pr_b == p['name']:
+              nu = int(input('how many do you want ? '))
+              sum = sum + (int(nu) * int(p['price']))
+              n = int(p['number'])
+              if n == 0:
+                  Delete(pr_b)
+                  print('This product is not available')
+                  break
+              elif nu > n:
+                  print('This product is not available enough')
+                  break
+              else:
+                  pay = int(p['price'])
+                  paym = pay * n
+                  print('payment : ' + str(paym))
+                  n -= nu
+                  p['number'] = n
+                  shoppingg = {'code': p['code'], 'name': p['name'], 'price': p['price'],'count': nu}
+                  shopping.append(shoppingg)
+                  break
+      else:
+         print('This product is not in stock.')
+
+      fl=int(input('Do you want to continue ? \n1.yes\n2.no\n'))
+      if fl==1:
+          f=1
+      else:
+          f=-1
+          for i in shopping:
+              print(f"{i['code']}\t{i['name']}\t\t{i['price']}\t{i['count']}")
+          print("Total amount =", sum)
+          print('\nThanks for your purchase\n')
+          break
 
 def save():
     lst = ['', '', '', '']
